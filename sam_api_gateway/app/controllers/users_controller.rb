@@ -8,6 +8,11 @@ class UsersController < ApplicationController
       value = user_params
       create_user = HTTParty.post(ms_ip("rg")+"/users", body: value.to_json, :headers => { 'Content-Type' => 'application/json' })
       if create_user.code == 201
+        create_ldap = HTTParty.post(ms_ip("ldap")+"/user/resources/ldapcruds", body: {
+          email: value[:username],
+          password:  value[:password],
+          name: value[:username]
+        }.to_json, :headers => { 'Content-Type' => 'application/json' })
         render status: 201, json: create_user.body
       else
         render status: create_user.code, json: create_user.body
