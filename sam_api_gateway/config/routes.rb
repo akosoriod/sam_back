@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+  resources :users
+  wash_out :check_user
+
   #Login
   get 'refreshtoken', to: 'sessions#refresh_token'
   post 'users/login', to: 'sessions#login'
