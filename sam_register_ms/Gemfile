@@ -38,5 +38,7 @@ group :development do
 end
 gem 'therubyracer', :platforms => :ruby
 gem 'execjs'
+
+gem 'wash_out'
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
