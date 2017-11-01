@@ -1,0 +1,4 @@
+sam_ldap_ms:
+  build: .
+  ports:
+    - "4001:4001"
