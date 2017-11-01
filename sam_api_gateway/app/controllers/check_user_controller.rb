@@ -1,5 +1,7 @@
 class CheckUserController < ApplicationController
-  #soap_service namespace: 'urn:WashOutSam_api_gateway', camelize_wsdl: :lower
+
+  skip_before_action :validate_token
+
   soap_service namespace: 'urn:WashOut'
   #check case
   soap_action "check",
