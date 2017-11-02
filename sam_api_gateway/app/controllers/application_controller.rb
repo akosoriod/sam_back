@@ -37,6 +37,8 @@ class ApplicationController < ActionController::API
       host += "3005"
     when "schs" # programacion
       host += "3006"
+    when "ldap" # programacion
+      host += "4001"
     end
     return host
   end

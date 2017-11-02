@@ -3,26 +3,31 @@ class SessionsController < ApplicationController
 skip_before_action :validate_token, only: [:refresh_token, :login]
 
   def login
-    login = HTTParty.post(ms_ip("rg")+"/users/login", body: {
-      username: params[:username],
-      password: params[:password]
-    }.to_json,
+    ldap = HTTParty.post(ms_ip("ldap")+"/user/resources/ldap", body: { email: params[:username], password: params[:password]}.to_json,
       :headers => { 'Content-Type' => 'application/json' })
-    if login.code == 200
-      device_reg = HTTParty.post(ms_ip("nt")+"/user_devices", body:{
-        username: params[:username],
-        device_id: params[:device_id]
-      }.to_json,
-      :headers => { 'Content-Type' => 'application/json' })
-      if device_reg.code == 201
-        token = HTTParty.get(ms_ip("ss")+"/token/"+params[:username])
-        render status: token.code, json: append_token_user(token, login)
+      puts "LDAP: #{ldap.code}"
+      puts "LDAP: #{ldap.body}"
+      if ldap.code == 200
+        login = HTTParty.post(ms_ip("rg")+"/users/login", body: { username: params[:username],  password: params[:password]}.to_json,
+          :headers => { 'Content-Type' => 'application/json' })
+        if login.code == 200
+          device_reg = HTTParty.post(ms_ip("nt")+"/user_devices", body:{
+            username: params[:username],
+            device_id: params[:device_id]
+          }.to_json,
+          :headers => { 'Content-Type' => 'application/json' })
+          if device_reg.code == 201
+            token = HTTParty.get(ms_ip("ss")+"/token/"+params[:username])
+            render status: token.code, json: append_token_user(token, login)
+          else
+            render json: device_reg.body, status: device_reg.code
+          end
+        else
+          render status: 404
+        end
       else
-        render json: device_reg.body, status: device_reg.code
+        render status: ldap.code, json: ldap.body
       end
-    else
-      render status: 404
-    end
   end
 
   def append_token_user(token, user)

@@ -16,8 +16,8 @@ import (
 	"github.com/satori/go.uuid"
 )
 
-const TokenMaxTime = 100    //Minutes
-const RefTokenMaxTime = 100 //Hours
+const TokenMaxTime = 5    //Minutes
+const RefTokenMaxTime = 168 //Hours
 
 const (
 	refresh = "Refresh"
